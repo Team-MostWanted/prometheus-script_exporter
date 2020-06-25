@@ -21,11 +21,11 @@ var commandTests = []struct {
 	{exec.Command("test/resources/not_existing.py"), 999, "", ""},
 }
 
-func TestCommands(t *testing.T) {
+func TestRun(t *testing.T) {
 	for _, tt := range commandTests {
 		assert := assert.New(t)
 
-		result := Run(tt.program)
+		result := run(tt.program)
 
 		assert.Equalf(tt.expectedExitCode, result.exitCode, "Exit code incorrect for `%s`", tt.program)
 		assert.Equalf(tt.expectedStdOut, result.stdout, "StdOut has content check failed for `%s`", tt.program)
@@ -33,12 +33,12 @@ func TestCommands(t *testing.T) {
 	}
 }
 
-func TestDuration(t *testing.T) {
+func TestRunDuration(t *testing.T) {
 	assert := assert.New(t)
 
 	duration := 2.0
 	program := exec.Command("test/resources/sleeping.py", fmt.Sprintf("%f", duration))
-	result := Run(program)
+	result := run(program)
 
 	assert.Equal(0, result.exitCode, "Exit code incorrect for `%s`", program)
 	assert.GreaterOrEqual(result.duration.Seconds(), duration, "Duration incorrect `%s`", program)
