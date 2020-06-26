@@ -1,14 +1,20 @@
 # Example probe config file for the Script Exporter
 
-server:
-  host: 127.0.0.1     # ip used for listening, remove or leave empty for all available IP addresses
-  port: 8501          # port used for listening
-
 probes:
     - name: hello
       cmd: /usr/local/bin/python3
       arguments:
         - default: /Users/them/Projects/infra/script_exporter/test/resources/ok_print_arguments.py
+        - dynamic: true
+          param: first
+          default: hello
+        - dynamic: true
+          type: dynamic
+          param: second
+    - name: hello2
+      cmd: /usr/local/bin/python3
+      arguments:
+        - default: /Users/them/Projects/infra/script_exporter/test/resources/error_print_arguments.py
         - dynamic: true
           param: first
           default: hello
