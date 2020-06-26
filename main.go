@@ -57,9 +57,11 @@ type probeType struct {
 }
 
 type probeArgument struct {
-	Dynamic bool
-	Default *string
+	dynamic      bool
+	defaultValue *string
 }
+
+var restrictedParams = []string{"module"}
 
 var config internalConfig
 var probes []string
@@ -104,7 +106,7 @@ func readConfig() {
 		log.Fatal("Could not load config files: ", err)
 	}
 
-	log.Debug("[readConfig] files found (regardless of extension): ", len(files))
+	log.Debug("[readConfig] files found (regardless of .yaml extension): ", len(files))
 
 	for _, file := range files {
 		if !file.IsDir() && strings.HasSuffix(file.Name(), ".yaml") {
@@ -122,7 +124,7 @@ func readConfig() {
 			var yamlConfig YamlConfig
 			err = yaml.Unmarshal(yamlFile, &yamlConfig)
 			if err != nil {
-				log.Fatalf("Could not parse yaml: %v", err)
+				log.Fatalf("Could not parse yaml (%s): %v", file.Name(), err)
 			}
 
 			if yamlConfig.Server != nil {
@@ -141,7 +143,7 @@ func configServer(serverConfig YamlServerConfig, fileName string) {
 
 	if serverConfig.Host != nil {
 		if config.server.host != "" {
-			log.Fatalf("Config failure 'host' is already set remove from file: %s", fileName)
+			log.Fatalf("Config failure 'host' is already set (%s)", fileName)
 		}
 
 		config.server.host = *serverConfig.Host
@@ -149,7 +151,7 @@ func configServer(serverConfig YamlServerConfig, fileName string) {
 
 	if serverConfig.Port != nil {
 		if config.server.port != 0 {
-			log.Fatalf("Config failure 'port' is already set remove from file: %s", fileName)
+			log.Fatalf("Config failure 'port' is already set (%s)", fileName)
 		}
 
 		config.server.port = *serverConfig.Port
@@ -159,11 +161,11 @@ func configServer(serverConfig YamlServerConfig, fileName string) {
 func configProbes(probesConfig YamlProbeConfig, fileName string) {
 	log.Debug("[configProbes] merging Probes block: ", fileName)
 
-	for _, probe := range probesConfig {
+	for key, probe := range probesConfig {
 		log.Debug("[configProbes] found probe: ", probe.Name)
 
 		if _, exists := config.probes[probe.Name]; exists {
-			log.Fatalf("Config failure probe with name %s already exists remove from %s", probe.Name, fileName)
+			log.Fatalf("Config failure probe with name '%s' already exists (%s)", probe.Name, fileName)
 		}
 
 		config.probes[probe.Name] = probeType{
@@ -174,14 +176,30 @@ func configProbes(probesConfig YamlProbeConfig, fileName string) {
 		for _, argument := range probe.Arguments {
 			if _, exists := config.probes[probe.Name].arguments[argument.Param]; exists {
 				log.Fatalf(
-					"Config failure probe parameter %s already exists for %s remove from %s",
+					"Config failure probe argument '%s' already exists for '%s' (%s)",
 					argument.Param,
 					probe.Name,
 					fileName,
 				)
 			}
 
-			config.probes[probe.Name].arguments[argument.Param] = probeArgument{
+			for _, restricted := range restrictedParams {
+				if restricted == argument.Param {
+					log.Fatalf(
+						"Config failure restricted probe argument '%s' on '%s' (%s)",
+						argument.Param,
+						probe.Name,
+						fileName,
+					)
+				}
+			}
+
+			var argName string = string(key)
+			if argument.Param != "" {
+				argName = argument.Param
+			}
+
+			config.probes[probe.Name].arguments[argName] = probeArgument{
 				argument.Dynamic,
 				&argument.Default,
 			}
@@ -279,32 +297,63 @@ func run(cmd *exec.Cmd) runResult {
 }
 
 func probe(w http.ResponseWriter, r *http.Request) {
-	namespace := "scriptExporter"
 	moduleName := r.URL.Query().Get("module")
 
-	if moduleName != "helloworld" {
+	probe, exists := config.probes[moduleName]
+	if !exists {
 		http.Error(w, "Invalid Probe", http.StatusNotFound)
-		return
 	}
 
+	result := run(buildCmd(probe, r))
+	// result := run(exec.Command("test/resources/helloworld.py"))
+
+	// Serve metrics
+	h := promhttp.HandlerFor(
+		metrics("probe_script", moduleName, result),
+		promhttp.HandlerOpts{},
+	)
+	h.ServeHTTP(w, r)
+}
+
+func buildCmd(probe probeType, r *http.Request) *exec.Cmd {
+	var args []string
+
+	for key, argument := range probe.arguments {
+		var value *string
+
+		if argument.dynamic {
+			value = r.URL.Query().Get(key)
+		}
+
+		if value == nil {
+			value = argument.defaultValue
+		}
+
+		args = append(args)
+	}
+
+	return exec.Command(probe.cmd, args...)
+}
+
+func metrics(namespace string, subsystem string, result runResult) *prometheus.Registry {
 	// Init metrics
 	gaugeUp := prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: namespace,
-		Subsystem: moduleName,
+		Subsystem: subsystem,
 		Name:      "up",
 		Help:      "Show if the script was executed successfully",
 	})
 
 	gaugeDuration := prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: namespace,
-		Subsystem: moduleName,
+		Subsystem: subsystem,
 		Name:      "duration_seconds",
 		Help:      "Shows the execution time of the script",
 	})
 
 	gaugeExitCode := prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace: namespace,
-		Subsystem: moduleName,
+		Subsystem: subsystem,
 		Name:      "exitCode",
 		Help:      "States the exit code given by the script",
 	})
@@ -315,9 +364,7 @@ func probe(w http.ResponseWriter, r *http.Request) {
 	registry.MustRegister(gaugeDuration)
 	registry.MustRegister(gaugeExitCode)
 
-	// Give metrics values
-	result := run(exec.Command("test/resources/helloworld.py"))
-
+	// Set metrics
 	if result.exitCode == 0 {
 		gaugeUp.Set(1)
 	} else {
@@ -327,7 +374,5 @@ func probe(w http.ResponseWriter, r *http.Request) {
 	gaugeDuration.Set(result.duration.Seconds())
 	gaugeExitCode.Set(float64(result.exitCode))
 
-	// Serve metrics
-	h := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
-	h.ServeHTTP(w, r)
+	return registry
 }
