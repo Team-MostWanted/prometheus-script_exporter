@@ -1,0 +1,5 @@
+# Example server config file for the Script Exporter
+
+server:
+    host: 127.0.0.1     # ip used for listening, remove or leave empty for all available IP addresses
+    port: 8501          # port used for listening

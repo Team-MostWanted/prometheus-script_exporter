@@ -1,0 +1,23 @@
+# Example probe config file for the Script Exporter
+
+probes:
+    - name: hello
+      cmd: /usr/local/bin/python3
+      arguments:
+        - default: /Users/them/Projects/infra/script_exporter/test/resources/ok_print_arguments.py
+        - dynamic: true
+          param: first
+          default: hello
+        - dynamic: true
+          type: dynamic
+          param: second
+    - name: hello2
+      cmd: /usr/local/bin/python3
+      arguments:
+        - default: /Users/them/Projects/infra/script_exporter/test/resources/error_print_arguments.py
+        - dynamic: true
+          param: first
+          default: hello
+        - dynamic: true
+          type: dynamic
+          param: second
