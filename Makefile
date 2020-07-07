@@ -29,7 +29,7 @@ all: test build
 
 .PHONY: build
 build:
-	$(GO) build $(GO_LDFLAGS) -o $(APPNAME)-$(OS)-$(ARCH) -v ./...
+	$(GO) build $(GO_LDFLAGS) -o $(BUILD_DIR)/$(APPNAME)-$(OS)-$(ARCH) -v ./...
 
 .PHONY: test
 test:
