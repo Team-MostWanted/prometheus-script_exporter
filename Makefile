@@ -13,7 +13,7 @@ DATE		:= $(shell date +%FT%T%z)
 
 GOPATH		?= $(shell go env GOPATH)
 GO_LDFLAGS	+= -X main.name=$(APPNAME)
-GO_LDFLAGS	+= -X main.version=$(VERSION)
+GO_LDFLAGS	+= -X main.version=v$(VERSION)
 GO_LDFLAGS	+= -X main.commit=$(COMMIT)
 GO_LDFLAGS	+= -X main.date=$(DATE)
 # strip debug info from binary
@@ -29,7 +29,7 @@ all: test build
 
 .PHONY: build
 build:
-	$(GO) build $(GO_LDFLAGS) -o $(BUILD_DIR)/$(APPNAME)-$(OS)-$(ARCH) -v ./...
+	$(GO) build $(GO_LDFLAGS) -o $(BUILD_DIR)/$(APPNAME)-$(VERSION)-$(OS)-$(ARCH)/$(APPNAME) -v ./...
 
 .PHONY: test
 test:
@@ -44,26 +44,30 @@ clean:
 .PHONY: compile
 compile:
 	# FreeBDS
-	GOOS=freebsd GOARCH=amd64 $(GO) build -o $(BUILD_DIR)/$(APPNAME)-freebsd-amd64 -v ./...
+	GOOS=freebsd GOARCH=amd64 $(GO) build -o $(BUILD_DIR)/$(APPNAME)-$(VERSION)-freebsd-amd64/$(APPNAME) -v ./...
 	# MacOS
-	GOOS=darwin GOARCH=amd64 $(GO) build -o $(BUILD_DIR)/$(APPNAME)-darwin-amd64 -v ./...
+	GOOS=darwin GOARCH=amd64 $(GO) build -o $(BUILD_DIR)/$(APPNAME)-$(VERSION)-darwin-amd64/$(APPNAME) -v ./...
 	# Linux
-	GOOS=linux GOARCH=amd64 $(GO) build -o $(BUILD_DIR)/$(APPNAME)-linux-amd64 -v ./...
+	GOOS=linux GOARCH=amd64 $(GO) build -o $(BUILD_DIR)/$(APPNAME)-$(VERSION)-linux-amd64/$(APPNAME)  -v ./...
 	# Windows
-	GOOS=windows GOARCH=amd64 $(GO) build -o $(BUILD_DIR)/$(APPNAME)-windows-amd64 -v ./...
+	GOOS=windows GOARCH=amd64 $(GO) build -o $(BUILD_DIR)/$(APPNAME)-$(VERSION)-windows-amd64/$(APPNAME)  -v ./...
 
 .PHONY: dist
 dist: clean compile
 	mkdir -p $(DIST_DIR)
 
-	tar -czvf $(BUILD_DIR)/$(APPNAME)-freebsd-amd64.tar $(BUILD_DIR)/$(APPNAME)-freebsd-amd64
-	gzip $(BUILD_DIR)/$(APPNAME)-freebsd-amd64.tar > $(DIST_DIR)/$(APPNAME)-freebsd-amd64.tar.gz
+	tar -C $(BUILD_DIR) -czvf $(BUILD_DIR)/$(APPNAME)-$(VERSION)-freebsd-amd64.tar $(APPNAME)-$(VERSION)-freebsd-amd64
+	gzip $(BUILD_DIR)/$(APPNAME)-$(VERSION)-freebsd-amd64.tar
+	mv $(BUILD_DIR)/$(APPNAME)-$(VERSION)-freebsd-amd64.tar.gz $(DIST_DIR)/$(APPNAME)-$(VERSION)-freebsd-amd64.tar.gz
 
-	tar -czvf $(BUILD_DIR)/$(APPNAME)-darwin-amd64.tar $(BUILD_DIR)/$(APPNAME)-darwin-amd64
-	gzip $(BUILD_DIR)/$(APPNAME)-darwin-amd64.tar > $(DIST_DIR)/$(APPNAME)-darwin-amd64.tar.gz
+	tar -C $(BUILD_DIR) -czvf $(BUILD_DIR)/$(APPNAME)-$(VERSION)-darwin-amd64.tar $(APPNAME)-$(VERSION)-darwin-amd64
+	gzip $(BUILD_DIR)/$(APPNAME)-$(VERSION)-darwin-amd64.tar
+	mv $(BUILD_DIR)/$(APPNAME)-$(VERSION)-darwin-amd64.tar.gz $(DIST_DIR)/$(APPNAME)-$(VERSION)-darwin-amd64.tar.gz
 
-	tar -czvf $(BUILD_DIR)/$(APPNAME)-linux-amd64.tar $(BUILD_DIR)/$(APPNAME)-linux-amd64
-	gzip $(BUILD_DIR)/$(APPNAME)-linux-amd64.tar > $(DIST_DIR)/$(APPNAME)-linux-amd64.tar.gz
+	tar -C $(BUILD_DIR) -czvf $(BUILD_DIR)/$(APPNAME)-$(VERSION)-linux-amd64.tar $(APPNAME)-$(VERSION)-linux-amd64
+	gzip $(BUILD_DIR)/$(APPNAME)-$(VERSION)-linux-amd64.tar
+	mv $(BUILD_DIR)/$(APPNAME)-$(VERSION)-linux-amd64.tar.gz $(DIST_DIR)/$(APPNAME)-$(VERSION)-linux-amd64.tar.gz
 
-	tar  -czvf $(BUILD_DIR)/$(APPNAME)-windows-amd64.tar $(BUILD_DIR)/$(APPNAME)-windows-amd64
-	gzip $(BUILD_DIR)/$(APPNAME)-windows-amd64.tar > $(DIST_DIR)/$(APPNAME)-windows-amd64.tar.gz
+	tar -C $(BUILD_DIR)  -czvf $(BUILD_DIR)/$(APPNAME)-$(VERSION)-windows-amd64.tar $(APPNAME)-$(VERSION)-windows-amd64
+	gzip $(BUILD_DIR)/$(APPNAME)-$(VERSION)-windows-amd64.tar
+	mv $(BUILD_DIR)/$(APPNAME)-$(VERSION)-windows-amd64.tar.gz $(DIST_DIR)/$(APPNAME)-$(VERSION)-windows-amd64.tar.gz
