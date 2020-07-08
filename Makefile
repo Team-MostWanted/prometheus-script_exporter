@@ -56,18 +56,18 @@ compile:
 dist: clean compile
 	mkdir -p $(DIST_DIR)
 
-	tar -C $(BUILD_DIR) -czvf $(BUILD_DIR)/$(APPNAME)-$(VERSION)-freebsd-amd64.tar $(APPNAME)-$(VERSION)-freebsd-amd64
+	tar -C $(BUILD_DIR) -cvf $(BUILD_DIR)/$(APPNAME)-$(VERSION)-freebsd-amd64.tar $(APPNAME)-$(VERSION)-freebsd-amd64
 	gzip $(BUILD_DIR)/$(APPNAME)-$(VERSION)-freebsd-amd64.tar
 	mv $(BUILD_DIR)/$(APPNAME)-$(VERSION)-freebsd-amd64.tar.gz $(DIST_DIR)/$(APPNAME)-$(VERSION)-freebsd-amd64.tar.gz
 
-	tar -C $(BUILD_DIR) -czvf $(BUILD_DIR)/$(APPNAME)-$(VERSION)-darwin-amd64.tar $(APPNAME)-$(VERSION)-darwin-amd64
+	tar -C $(BUILD_DIR) -cvf $(BUILD_DIR)/$(APPNAME)-$(VERSION)-darwin-amd64.tar $(APPNAME)-$(VERSION)-darwin-amd64
 	gzip $(BUILD_DIR)/$(APPNAME)-$(VERSION)-darwin-amd64.tar
 	mv $(BUILD_DIR)/$(APPNAME)-$(VERSION)-darwin-amd64.tar.gz $(DIST_DIR)/$(APPNAME)-$(VERSION)-darwin-amd64.tar.gz
 
-	tar -C $(BUILD_DIR) -czvf $(BUILD_DIR)/$(APPNAME)-$(VERSION)-linux-amd64.tar $(APPNAME)-$(VERSION)-linux-amd64
+	tar -C $(BUILD_DIR) -cvf $(BUILD_DIR)/$(APPNAME)-$(VERSION)-linux-amd64.tar $(APPNAME)-$(VERSION)-linux-amd64
 	gzip $(BUILD_DIR)/$(APPNAME)-$(VERSION)-linux-amd64.tar
 	mv $(BUILD_DIR)/$(APPNAME)-$(VERSION)-linux-amd64.tar.gz $(DIST_DIR)/$(APPNAME)-$(VERSION)-linux-amd64.tar.gz
 
-	tar -C $(BUILD_DIR)  -czvf $(BUILD_DIR)/$(APPNAME)-$(VERSION)-windows-amd64.tar $(APPNAME)-$(VERSION)-windows-amd64
+	tar -C $(BUILD_DIR) -cvf $(BUILD_DIR)/$(APPNAME)-$(VERSION)-windows-amd64.tar $(APPNAME)-$(VERSION)-windows-amd64
 	gzip $(BUILD_DIR)/$(APPNAME)-$(VERSION)-windows-amd64.tar
 	mv $(BUILD_DIR)/$(APPNAME)-$(VERSION)-windows-amd64.tar.gz $(DIST_DIR)/$(APPNAME)-$(VERSION)-windows-amd64.tar.gz
