@@ -1,29 +1,29 @@
 # Prometheus Script Exporter
 
-Helper binary for promethues to expose basic metrics for a script or executable.
+Helper binary for Prometheus to expose basic metrics for a script or executable.
 
 In using `script_exporter` there are 4 things to consider:
 
 1. Web server listening settings for this script exporter
 2. Probe settings
 3. Usable script to be executed via the probe
-4. Scrape configuration in prometheus
+4. Scrape configuration in Prometheus
 
 Server settings can be configured via [parameters](#Parameters) or via [configuration](#Configuration). Parameters will take precedence over configuration settings.
 
 Probe settings can only be configured via [configuration](#Configuration). And will be available via http://localhost:8501/probe?module=example.
 
-For the settings in prometheus look at the [Scrape configuration section](#Scrape%20configuration).
+For the settings in Prometheus look at the [Scrape configuration section](#Scrape%20configuration).
 
 ## Usage
 
 To create the binary look at the [Building section](#Building).
 
-Make sure you have a script or executable that returns an exit code 0 for success and an exit code > 0 on failure.
+Make sure you have a script or executable that returns an exit code 0 for success and any other exit code on failure.
 
-> :note:
+> :warning:
 >
-> The script or executable should have a quick response, and not be a daemon.
+> The script or executable should have a fairly quick response, and not be a daemon.
 
 Create an appropriate [configuration](#Configuration).
 
@@ -280,7 +280,7 @@ Down below are some features we think about adding in the future.
 - split main.go into multiple files
 - add config option for sensitive data
 - add request log
-- add prometheus style of listener web.listen-address (127.0.0.1:8501)
+- add Prometheus style of listener web.listen-address (127.0.0.1:8501)
 - add support for long arguments (e.g. --version)
 - be able to use stdout as input for configured metric values
 - reload configuration via commandline
