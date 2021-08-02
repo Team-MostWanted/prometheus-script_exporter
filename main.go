@@ -197,7 +197,7 @@ func configProbes(probesConfig YamlProbeConfig, fileName string) {
 
 		i := 0
 		for key, argument := range probe.Arguments {
-			var argName string = string(key)
+			var argName string = fmt.Sprint(key)
 
 			if argument.Param != nil {
 				if _, exists := config.probes[probe.Name].arguments[*argument.Param]; exists {
