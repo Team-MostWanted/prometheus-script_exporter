@@ -3,6 +3,11 @@
 probes:
   - name: example1
     cmd: /usr/local/bin/python3
+    labels:
+      - key: foo
+        value: bar
+      - key: baz
+        value: qux
     arguments:
       - default: ./test/resources/ok_print_arguments.py
       - dynamic: true

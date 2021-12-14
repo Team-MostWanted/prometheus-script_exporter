@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [1.1.0] - 2021-12-14
 - Added: access logs in Apache Common Log Format
+- Added: an option to add metric labels to a probe config
 - Changed: split main.go into multiple files
 - Security: updated dependencies
 

@@ -40,8 +40,12 @@ type YamlServerConfig struct {
 
 // YamlProbeConfig mapping to Probes part
 type YamlProbeConfig []struct {
-	Name      string `yaml:"name"`
-	Cmd       string `yaml:"cmd"`
+	Name   string `yaml:"name"`
+	Cmd    string `yaml:"cmd"`
+	Labels []struct {
+		Key   string `yaml:"key"`
+		Value string `yaml:"value"`
+	}
 	Arguments []struct {
 		Dynamic *bool   `yaml:"dynamic"`
 		Param   *string `yaml:"param"`
@@ -60,6 +64,8 @@ type internalConfig struct {
 
 type probeType struct {
 	cmd           string
+	labelNames    []string
+	labelValues   []string
 	arguments     map[string]probeArgument
 	argumentOrder *[]string
 }
@@ -172,8 +178,21 @@ func configProbes(probesConfig YamlProbeConfig, fileName string) {
 
 		var argumentOrder []string = make([]string, len(probe.Arguments))
 
+		var labelNames []string
+		var labelValues []string
+		for _, label := range probe.Labels {
+			if label.Key == "" || label.Value == "" {
+				log.Fatalf("Config failure probe with name '%s' invalid labels entry given, key and value are required (%s)", probe.Name, fileName)
+			}
+
+			labelNames = append(labelNames, label.Key)
+			labelValues = append(labelValues, label.Value)
+		}
+
 		config.probes[probe.Name] = probeType{
 			probe.Cmd,
+			labelNames,
+			labelValues,
 			make(map[string]probeArgument),
 			&argumentOrder,
 		}

@@ -42,7 +42,7 @@ func probe(w http.ResponseWriter, r *http.Request) {
 
 	// Serve metrics
 	h := promhttp.HandlerFor(
-		metrics("probe_script", moduleName, result),
+		metrics("probe_script", moduleName, probe, result),
 		promhttp.HandlerOpts{},
 	)
 	h.ServeHTTP(w, r)
