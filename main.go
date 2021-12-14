@@ -4,7 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"os"
 
+	"github.com/gorilla/handlers"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 )
@@ -29,7 +31,7 @@ func main() {
 	http.HandleFunc("/", landingpage)
 	http.Handle("/metrics", promhttp.Handler())
 	http.HandleFunc("/probe", probe)
-	err := http.ListenAndServe(addr, nil)
+	err := http.ListenAndServe(addr, handlers.LoggingHandler(os.Stdout, http.DefaultServeMux))
 
 	if err != nil {
 		log.Fatalf("Could not start server: %v", err)

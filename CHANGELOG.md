@@ -6,7 +6,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Upcoming
 
-## [1.0.0] - 2021-12-14
+## [1.1.0] - 2021-12-14
+- Added: access logs in Apache Common Log Format
 - Changed: split main.go into multiple files
 
 ## [1.0.0] - 2020-07-08
