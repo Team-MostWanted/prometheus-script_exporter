@@ -99,6 +99,9 @@ key         | description
 ------------|----------
 name        | name of the probe, used for the `module` query parameter in the [probe endpoint](#Endpoints), must match regex ^[a-zA-Z0-9:_]+$
 cmd         | command that is executed
+labels      | list of labels used for the metrics
+- key       | label name
+- value     | label static value
 arguments   | list of arguments used for the cmd, in the order as given
 - default   | the default value of the argument
 - dynamic   | default false, signifies if this could be set via probe query parameters
@@ -112,6 +115,11 @@ Example:
 probes:
     - name: example1
       cmd: /usr/local/bin/python3
+      labels:
+        - key: foo
+            value: bar
+        - key: baz
+            value: qux
       arguments:
         - default: ./test/resources/ok_print_arguments.py
         - dynamic: true
@@ -277,9 +285,7 @@ dist    | execute `clean` and `compile` targets, and create tar.gz files in `./d
 Down below are some features we think about adding in the future.
 
 - improved Probe debug options
-- split main.go into multiple files
 - add config option for sensitive data
-- add request log
 - add Prometheus style of listener web.listen-address (127.0.0.1:8501)
 - add support for long arguments (e.g. --version)
 - be able to use stdout as input for configured metric values
