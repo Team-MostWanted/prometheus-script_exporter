@@ -6,5 +6,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Upcoming
 
+## [1.0.0] - 2021-12-14
+- Changed: split main.go into multiple files
+
 ## [1.0.0] - 2020-07-08
 - Added: initial version of script exporter
