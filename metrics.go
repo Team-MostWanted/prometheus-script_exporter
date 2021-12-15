@@ -5,14 +5,14 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func metrics(namespace string, subsystem string, probe probeType, result runResult) *prometheus.Registry {
+func metrics(namespace string, module string, probe probeType, result runResult) *prometheus.Registry {
 	// Init metrics
-	log.Debug("[metrics] Initialize metrics: ", subsystem)
+	log.Debug("[metrics] Initialize metrics: ", module)
 
 	gaugeUp := prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Namespace: namespace,
-			Subsystem: subsystem,
+			Subsystem: probe.subsystem,
 			Name:      "up",
 			Help:      "General availability of this probe",
 		},
@@ -22,7 +22,7 @@ func metrics(namespace string, subsystem string, probe probeType, result runResu
 	gaugeSuccess := prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Namespace: namespace,
-			Subsystem: subsystem,
+			Subsystem: probe.subsystem,
 			Name:      "success",
 			Help:      "Show if the script was executed successfully",
 		},
@@ -32,7 +32,7 @@ func metrics(namespace string, subsystem string, probe probeType, result runResu
 	gaugeDuration := prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Namespace: namespace,
-			Subsystem: subsystem,
+			Subsystem: probe.subsystem,
 			Name:      "duration_seconds",
 			Help:      "Shows the execution time of the script",
 		},
@@ -40,7 +40,7 @@ func metrics(namespace string, subsystem string, probe probeType, result runResu
 	)
 
 	// Register metrics
-	log.Debug("[metrics] Register metrics: ", subsystem)
+	log.Debug("[metrics] Register metrics: ", module)
 
 	registry := prometheus.NewRegistry()
 	registry.MustRegister(gaugeUp)
@@ -48,7 +48,7 @@ func metrics(namespace string, subsystem string, probe probeType, result runResu
 	registry.MustRegister(gaugeDuration)
 
 	// Set metrics
-	log.Debug("[metrics] Set metrics: ", subsystem)
+	log.Debug("[metrics] Set metrics: ", module)
 
 	gaugeUp.WithLabelValues(probe.labelValues...).Set(1)
 

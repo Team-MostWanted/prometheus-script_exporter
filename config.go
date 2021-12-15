@@ -40,9 +40,10 @@ type YamlServerConfig struct {
 
 // YamlProbeConfig mapping to Probes part
 type YamlProbeConfig []struct {
-	Name   string `yaml:"name"`
-	Cmd    string `yaml:"cmd"`
-	Labels []struct {
+	Name      string `yaml:"name"`
+	Cmd       string `yaml:"cmd"`
+	Subsystem string `yaml:"subsystem"`
+	Labels    []struct {
 		Key   string `yaml:"key"`
 		Value string `yaml:"value"`
 	}
@@ -64,6 +65,7 @@ type internalConfig struct {
 
 type probeType struct {
 	cmd           string
+	subsystem     string
 	labelNames    []string
 	labelValues   []string
 	arguments     map[string]probeArgument
@@ -191,6 +193,7 @@ func configProbes(probesConfig YamlProbeConfig, fileName string) {
 
 		config.probes[probe.Name] = probeType{
 			probe.Cmd,
+			probe.Subsystem,
 			labelNames,
 			labelValues,
 			make(map[string]probeArgument),

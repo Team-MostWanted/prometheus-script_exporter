@@ -18,6 +18,7 @@ probes:
         param: second
   - name: example2
     cmd: /usr/local/bin/python3
+    subsystem: something
     arguments:
       - default: ./test/resources/error_print_arguments.py
       - dynamic: true
