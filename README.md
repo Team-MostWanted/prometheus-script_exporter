@@ -99,10 +99,16 @@ key         | description
 ------------|----------
 name        | name of the probe, used for the `module` query parameter in the [probe endpoint](#Endpoints), must match regex ^[a-zA-Z0-9:_]+$
 cmd         | command that is executed
+subsystem   | optional subsystem for the metric name default empty `probe_script_{up|success|duration_seconds}` with `probe_script_{subsystem}_{up|success|duration_seconds}`
+labels      | list of labels used for the metrics
+- key       | label name
+- value     | label static value
 arguments   | list of arguments used for the cmd, in the order as given
 - default   | the default value of the argument
 - dynamic   | default false, signifies if this could be set via probe query parameters
 - param     | name of query parameter, if the argument has `dynamic` true, module and debug are restricted and not usable as param values.
+
+Note make sure a metric is unique by using either labels or subsystem.
 
 With a dynamic argument a probe could be created that could be scraped multiple times with different parameters.
 
@@ -112,7 +118,12 @@ Example:
 probes:
     - name: example1
       cmd: /usr/local/bin/python3
-      arguments:
+      labels:
+        - key: foo
+          value: bar
+        - key: baz
+          value: qux
+        arguments:
         - default: ./test/resources/ok_print_arguments.py
         - dynamic: true
           param: first
@@ -122,6 +133,7 @@ probes:
           param: second
     - name: example2
       cmd: /usr/local/bin/python3
+      subsystem: something
       arguments:
         - default: ./test/resources/error_print_arguments.py
         - dynamic: true
@@ -223,18 +235,31 @@ up                  | 1 if the probe is up, or not existend
 success             | 1 if the exit code of the command = 0, 0 on any other exit code
 duration_seconds    | the duration of the command in seconds
 
-Example:
+Example 1:
 
 ```
-# HELP probe_script_example1_duration_seconds Shows the execution time of the script
-# TYPE probe_script_example1_duration_seconds gauge
-probe_script_example1_duration_seconds 0.051760688
-# HELP probe_script_example1_success Show if the script was executed successfully
-# TYPE probe_script_example1_success gauge
-probe_script_example1_success 1
-# HELP probe_script_example1_up General availability of this probe
-# TYPE probe_script_example1_up gauge
-probe_script_example1_up 1
+# HELP probe_script_duration_seconds Shows the execution time of the script
+# TYPE probe_script_duration_seconds gauge
+probe_script_duration_seconds{baz="qux",foo="bar"} 0.037359001
+# HELP probe_script_success Show if the script was executed successfully
+# TYPE probe_script_success gauge
+probe_script_success{baz="qux",foo="bar"} 1
+# HELP probe_script_up General availability of this probe
+# TYPE probe_script_up gauge
+probe_script_up{baz="qux",foo="bar"} 1
+```
+
+Example 2:
+```
+# HELP probe_script_something_duration_seconds Shows the execution time of the script
+# TYPE probe_script_something_duration_seconds gauge
+probe_script_something_duration_seconds 0.037780856
+# HELP probe_script_something_success Show if the script was executed successfully
+# TYPE probe_script_something_success gauge
+probe_script_something_success 0
+# HELP probe_script_something_up General availability of this probe
+# TYPE probe_script_something_up gauge
+probe_script_something_up 1
 ```
 
 ## Developing
@@ -277,9 +302,7 @@ dist    | execute `clean` and `compile` targets, and create tar.gz files in `./d
 Down below are some features we think about adding in the future.
 
 - improved Probe debug options
-- split main.go into multiple files
 - add config option for sensitive data
-- add request log
 - add Prometheus style of listener web.listen-address (127.0.0.1:8501)
 - add support for long arguments (e.g. --version)
 - be able to use stdout as input for configured metric values
