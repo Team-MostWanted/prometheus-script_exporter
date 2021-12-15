@@ -6,6 +6,11 @@ import (
 )
 
 func landingpage(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
 	title := "Script Exporter"
 
 	var probesString string

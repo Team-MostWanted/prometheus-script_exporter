@@ -28,10 +28,18 @@ func main() {
 
 	log.Info("Started on ", addr)
 
-	http.HandleFunc("/", landingpage)
-	http.Handle("/metrics", promhttp.Handler())
-	http.HandleFunc("/probe", probe)
-	err := http.ListenAndServe(addr, handlers.LoggingHandler(os.Stdout, http.DefaultServeMux))
+	r := http.NewServeMux()
+	
+	r.HandleFunc("/", landingpage)
+	r.Handle("/metrics", promhttp.Handler())
+	r.HandleFunc("/probe", probe)
+
+	err := http.ListenAndServe(
+		addr,
+		handlers.CompressHandler(
+			handlers.LoggingHandler(os.Stdout, r),
+		),
+	)
 
 	if err != nil {
 		log.Fatalf("Could not start server: %v", err)
