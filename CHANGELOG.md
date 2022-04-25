@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Upcoming
 
+## [1.2.0] - 2022-04-22
+- Security: updated dependencies
+
 ## [1.1.0] - 2021-12-14
 - Added: access logs in Apache Common Log Format
 - Added: an option to add metric labels to a probe config
