@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [1.4.0] - 2022-10-11
 - Added: makefile support for update dependencies
+- Added: makefile support for MacOs M1 + github upload all dist artifacts
 - Security: updated dependencies
 
 ## [1.3.0] - 2022-07-11
