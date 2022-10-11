@@ -26,16 +26,9 @@ jobs:
       run: make dist
 
     - name: create the release
-      id: create-new-release
-      uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        prerelease: false
-        automatic_release_tag: ${{ steps.getversion.outputs.version }}+${{ github.run_number }}
-        title: ${{ steps.getversion.outputs.version }}+${{ github.run_number }}
-    - name: upload assets
       uses: softprops/action-gh-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
+        prerelease: false
+        tag_name: ${{ steps.getversion.outputs.version }}+${{ github.run_number }}
         files: ./dist/*.tar.gz
+        fail_on_unmatched_files: true
