@@ -33,43 +33,9 @@ jobs:
         prerelease: false
         automatic_release_tag: ${{ steps.getversion.outputs.version }}+${{ github.run_number }}
         title: ${{ steps.getversion.outputs.version }}+${{ github.run_number }}
-
-    - name: upload release assets windows
-      uses: actions/upload-release-asset@v1
+    - name: upload assets
+      uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-        asset_path: ./dist/script_exporter-${{ steps.getversion.outputs.version }}-windows-amd64.tar.gz
-        asset_name: script_exporter-${{ steps.getversion.outputs.version }}-windows-amd64.tar.gz
-        asset_content_type: application/zip
-
-    - name: upload release assets linux
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-        asset_path: ./dist/script_exporter-${{ steps.getversion.outputs.version }}-linux-amd64.tar.gz
-        asset_name: script_exporter-${{ steps.getversion.outputs.version }}-linux-amd64.tar.gz
-        asset_content_type: application/zip
-
-    - name: upload release assets darwin
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-        asset_path: ./dist/script_exporter-${{ steps.getversion.outputs.version }}-darwin-amd64.tar.gz
-        asset_name: script_exporter-${{ steps.getversion.outputs.version }}-darwin-amd64.tar.gz
-        asset_content_type: application/zip
-
-    - name: upload release assets freebsd
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-        asset_path: ./dist/script_exporter-${{ steps.getversion.outputs.version }}-freebsd-amd64.tar.gz
-        asset_name: script_exporter-${{ steps.getversion.outputs.version }}-freebsd-amd64.tar.gz
-        asset_content_type: application/zip
+        files: ./dist/*.tar.gz
