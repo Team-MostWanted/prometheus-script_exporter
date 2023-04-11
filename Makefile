@@ -29,7 +29,7 @@ all: test build
 
 .PHONY: update-dependencies
 update-dependencies:
-	$(GO) get -u
+	$(GO) get -t -u ./...
 	$(GO) mod tidy
 
 .PHONY: update

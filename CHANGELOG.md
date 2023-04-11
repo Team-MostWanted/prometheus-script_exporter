@@ -6,6 +6,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Upcoming
 
+## [1.6.0] - 2023-04-11
+- Security: updated dependencies
+- Added: GitHub dependabot as a Test
+- Changed: make update-dependencies to include test dependencies
+
 ## [1.5.0] - 2023-01-09
 - Security: updated dependencies
 
