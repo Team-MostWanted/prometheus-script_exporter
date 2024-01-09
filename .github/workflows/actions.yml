@@ -13,14 +13,14 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18
+        go-version: 1.21
 
     - name: checkout repo
       uses: actions/checkout@v2
 
     - name: read version file
       id: getversion
-      run: echo "::set-output name=version::$(cat VERSION)"
+      run: echo "::set-output name=version::$(make version)"
 
     - name: Build tar files
       run: make dist

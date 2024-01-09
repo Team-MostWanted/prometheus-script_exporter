@@ -29,7 +29,7 @@ func main() {
 	log.Info("Started on ", addr)
 
 	r := http.NewServeMux()
-	
+
 	r.HandleFunc("/", landingpage)
 	r.Handle("/metrics", promhttp.Handler())
 	r.HandleFunc("/probe", probe)

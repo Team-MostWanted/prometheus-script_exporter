@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"regexp"
@@ -80,7 +79,6 @@ type probeArgument struct {
 var restrictedParams = []string{"module", "debug"}
 
 var config internalConfig
-var probes []string
 
 func setup() {
 	// retrieve flags since that could contain the config folder
@@ -107,7 +105,7 @@ func setup() {
 func readConfig() {
 	log.Infof("Looking for configuration files in: %s", *flags.configDir)
 
-	files, err := ioutil.ReadDir(*flags.configDir)
+	files, err := os.ReadDir(*flags.configDir)
 	if err != nil {
 		log.Fatal("Could not load config files: ", err)
 	}
@@ -118,7 +116,7 @@ func readConfig() {
 		if !file.IsDir() && (strings.HasSuffix(file.Name(), ".yaml") || strings.HasSuffix(file.Name(), ".yml")) {
 			log.Debug("[readConfig] loading config file: ", file.Name())
 
-			yamlFile, err := ioutil.ReadFile(
+			yamlFile, err := os.ReadFile(
 				path.Join(*flags.configDir, file.Name()),
 			)
 			if err != nil {
@@ -170,7 +168,8 @@ func configProbes(probesConfig YamlProbeConfig, fileName string) {
 	for _, probe := range probesConfig {
 		log.Debug("[configProbes] found probe: ", probe.Name)
 
-		if match, _ := regexp.MatchString("^[a-zA-Z0-9:_]+$", probe.Name); !match {
+		matchName := regexp.MustCompile("^[a-zA-Z0-9:_]+$")
+		if match := matchName.MatchString(probe.Name); !match {
 			log.Fatalf("Config failure probe with name '%s' name must match ^[a-zA-Z0-9:_]+$ (%s)", probe.Name, fileName)
 		}
 
