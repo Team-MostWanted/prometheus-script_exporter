@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [1.10.0] - 2024-01-10
 - Security: updated the dependencies in Github actions
+- Added: Github action to have an automatically dependency check
 - Fixed: make dist-check was skipped because of missing branch variable
 - Fixed: added filename with the build folder
 - Changed: moved away from deprecated Github actions
