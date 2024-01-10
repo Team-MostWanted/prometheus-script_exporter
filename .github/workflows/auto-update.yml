@@ -19,9 +19,9 @@ jobs:
           YEAR=$(date +%Y)
           QUARTER=$(( ($(date +%-m)-1)/3+1 ))
 
-          echo "::set-output name=year::$YEAR"
-          echo "::set-output name=quarter::$QUARTER"
-          echo "::set-output name=year_quarter::${YEAR}Q${QUARTER}"
+          echo "year=$YEAR" >> $GITHUB_OUTPUT
+          echo "quarter=$QUARTER" >> $GITHUB_OUTPUT
+          echo "year_quarter=${YEAR}Q${QUARTER}" >> $GITHUB_OUTPUT
 
       - name: Execute make update
         run: make update
