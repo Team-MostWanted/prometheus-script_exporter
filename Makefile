@@ -72,8 +72,8 @@ build:
 
 .PHONY: dist-check
 dist-check:
-ifneq (,$(filter $(bamboo_planRepository_branchName),release/acceptance master))
-	@echo "Performing dist check for: $(bamboo_planRepository_branchName)"
+ifneq (,$(filter ${GITHUB_REF#refs/heads/},release/acceptance master))
+	@echo "Performing dist check for: ${GITHUB_REF#refs/heads/}"
 
 	@if ! test -z "$$(sed -E -n '/(upcoming|unreleased)/I,/##/p' changelog.md | sed '1d;$$d' | sed 's/[[:space:]-]//g')"; then \
 		echo "Error: cannot generate dist, changelog.md must not contain unreleased lines."; \
