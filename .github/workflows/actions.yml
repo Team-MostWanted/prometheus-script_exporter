@@ -20,7 +20,7 @@ jobs:
 
     - name: read version file
       id: getversion
-      run: echo "::set-output name=version::$(make version)"
+      run: echo "version=$(make version)" >> $GITHUB_OUTPUT
 
     - name: Build tar files
       run: make dist

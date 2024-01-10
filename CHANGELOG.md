@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [1.10.0] - upcoming
 - Security: updated the dependencies in Github actions
 - Fixed: make dist-check was skipped because of missing branch variable
+- Fixed: added filename with the build folder
+- Changed: moved away from deprecated Github actions
 
 ## [1.9.0] - 2024-01-09
 - Changed: updated makefile to a more generic one

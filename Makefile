@@ -64,7 +64,7 @@ build:
 		for target in $(TARGETS); do \
 			os=$$(echo $$target | cut -d/ -f1); \
 			arch=$$(echo $$target | cut -d/ -f2); \
-			GOOS=$$os GOARCH=$$arch $(GO) build $(GO_LDFLAGS) -o $(BUILD_DIR)/$(VERSION)-$$os-$$arch/ $(PACKAGES); \
+			GOOS=$$os GOARCH=$$arch $(GO) build $(GO_LDFLAGS) -o $(BUILD_DIR)/$(APPNAME)-$(VERSION)-$$os-$$arch/ $(PACKAGES); \
 		done; \
 	else \
 		echo "No building required, module does not contain the 'main' package."; \
@@ -72,7 +72,7 @@ build:
 
 .PHONY: dist-check
 dist-check:
-ifneq (,$(filter ${GITHUB_REF#refs/heads/},release/acceptance master))
+ifneq (,$(filter ${GITHUB_REF\#refs/heads/},release/acceptance master))
 	@echo "Performing dist check for: ${GITHUB_REF#refs/heads/}"
 
 	@if ! test -z "$$(sed -E -n '/(upcoming|unreleased)/I,/##/p' changelog.md | sed '1d;$$d' | sed 's/[[:space:]-]//g')"; then \
@@ -104,7 +104,7 @@ dist-create:
 		for target in $(TARGETS); do \
 			os=$$(echo $$target | cut -d/ -f1); \
 			arch=$$(echo $$target | cut -d/ -f2); \
-			tar -C $(BUILD_DIR) -cvzf $(DIST_DIR)/$(APPNAME)-$(VERSION)-$$os-$$arch.tar.gz $(VERSION)-$$os-$$arch; \
+			tar -C $(BUILD_DIR) -cvzf $(DIST_DIR)/$(APPNAME)-$(VERSION)-$$os-$$arch.tar.gz $(APPNAME)-$(VERSION)-$$os-$$arch; \
 		done; \
 	fi
 
