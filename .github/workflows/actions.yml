@@ -11,16 +11,16 @@ jobs:
 
     steps:
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v4
       with:
-        go-version: 1.21
+        go-version: 'stable'
 
     - name: checkout repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: read version file
       id: getversion
-      run: echo "::set-output name=version::$(make version)"
+      run: echo "version=$(make version)" >> $GITHUB_OUTPUT
 
     - name: Build tar files
       run: make dist

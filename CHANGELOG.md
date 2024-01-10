@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) with the minor change that we use a prefix instead of grouping.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2024-01-10
+- Security: updated the dependencies in Github actions
+- Added: Github action to have an automatically dependency check
+- Fixed: make dist-check was skipped because of missing branch variable
+- Fixed: added filename with the build folder
+- Changed: moved away from deprecated Github actions
+
 ## [1.9.0] - 2024-01-09
 - Changed: updated makefile to a more generic one
 - Fixed: minor issues stated from the new make update, eg replaced deprecated ioutils
