@@ -64,7 +64,7 @@ build:
 		for target in $(TARGETS); do \
 			os=$$(echo $$target | cut -d/ -f1); \
 			arch=$$(echo $$target | cut -d/ -f2); \
-			GOOS=$$os GOARCH=$$arch $(GO) build $(GO_LDFLAGS) -o $(BUILD_DIR)/$(APPNAME)-$(VERSION)-$$os-$$arch/ $(PACKAGES); \
+			CGO_ENABLED=0 GOOS=$$os GOARCH=$$arch $(GO) build $(GO_LDFLAGS) -o $(BUILD_DIR)/$(APPNAME)-$(VERSION)-$$os-$$arch/ $(PACKAGES); \
 		done; \
 	else \
 		echo "No building required, module does not contain the 'main' package."; \
