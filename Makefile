@@ -115,14 +115,14 @@ dist: clean dist-check build dist-create
 update-dependencies:
 	$(GO) get go@latest
 	# Remove patch level of GO version
-	@sed -i.bak "" -E 's/(go [0-9]+\.[0-9]+)\.[0-9]+/\1/' go.mod
-	@rm go.mod.bak
+	@sed -i.bak -E 's/(go [0-9]+\.[0-9]+)\.[0-9]+/\1/' go.mod
+	@rm -f go.mod.bak
 	$(GO) get -t -u $(PACKAGES)
 	$(GO) mod tidy
 
 	# Adding lines to changelog
-	@sed -i.bak "" -e 's/\(## \[$(VERSION)\]\)/$(CHANGELOG_LINES)\1/' $(CHANGELOG)
-	@rm go.mod.bak
+	@sed -i.bak -e 's/\(## \[$(VERSION)\]\)/$(CHANGELOG_LINES)\1/' $(CHANGELOG)
+	@rm -f $(CHANGELOG).bak
 
 .PHONY: update
 update: clean update-dependencies test
