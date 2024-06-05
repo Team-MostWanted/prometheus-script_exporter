@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [1.12.0] - 2024-06-05
 - Security: dependency and security updates
+- Added: license
+- Fixed: readme git clone url
 
 ## [1.11.0] - 2024-01-11
 - Fixed: binary build on ubuntu 22.04 doesn't run on ubuntu 20.04
