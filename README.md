@@ -280,7 +280,7 @@ The maintainers
 To create a working binary use:
 
 ```
-git clone ssh://git@bitbucket.mostwanted.io/infra/prometheus-script_exporter.git
+git clone git@github.com:Team-MostWanted/prometheus-script_exporter.git
 cd prometheus-script_exporter
 make
 ```
