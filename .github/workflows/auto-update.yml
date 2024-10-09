@@ -1,8 +1,8 @@
 name: Security Updates Workflow
 
 on:
-  schedule:
-    - cron: '0 12 1-7 1,4,7,10 1' # first monday every January, April, July and October
+  # schedule:
+  #   - cron: '0 12 1-7 1,4,7,10 1' # first monday every January, April, July and October
   workflow_dispatch:
 
 jobs:
@@ -33,10 +33,11 @@ jobs:
         run: make update
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Update dependencies for ${{ steps.vars.outputs.year_quarter }}"
+          sign-commits: true
           title: "Security Updates ${{ steps.vars.outputs.year_quarter }}"
           body: "Automated pull request created by GitHub Actions."
           branch: "feature/security-updates-${{ steps.vars.outputs.year_quarter }}"
