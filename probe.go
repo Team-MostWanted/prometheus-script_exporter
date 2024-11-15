@@ -73,6 +73,8 @@ func run(cmd *exec.Cmd) runResult {
 		if errors.As(err, &e) {
 			result.exitCode = e.ExitCode()
 		}
+
+		log.Error("[Run] encountered an error: ", result.stderr)
 	}
 
 	log.Debug("[Run] end duration: ", result.exitCode)
