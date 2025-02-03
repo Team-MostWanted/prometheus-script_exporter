@@ -315,6 +315,10 @@ clean       | clean the build and dist directories
 
 Down below are some features we think about adding in the future.
 
+- replace packages that appear to be abandoned, or are not updated recently:
+  - https://github.com/go-yaml/yaml/issues/788
+  - https://github.com/stretchr/testify/discussions/1560
+  - https://github.com/gorilla/handlers
 - improved Probe debug options
 - add config option for sensitive data
 - add Prometheus style of listener web.listen-address (127.0.0.1:8501)
