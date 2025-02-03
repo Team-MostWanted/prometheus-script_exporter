@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [1.18.0] - 2025-02-03
 - Security: dependency and security updates
+- Removed: auto auto update workflow, which was not working properly
 
 ## [1.17.0] - 2024-11-15
 - Added: extra logging on executed script error
