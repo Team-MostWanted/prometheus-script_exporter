@@ -23,24 +23,24 @@ var commandTests = []struct {
 
 func TestRun(t *testing.T) {
 	for _, tt := range commandTests {
-		assert := assert.New(t)
+		newAssert := assert.New(t)
 
 		result := run(tt.program)
 
-		assert.Equalf(tt.expectedExitCode, result.exitCode, "Exit code incorrect for `%s`", tt.program)
-		assert.Equalf(tt.expectedStdOut, result.stdout, "StdOut has content check failed for `%s`", tt.program)
-		assert.Equalf(tt.expectedStdErr, result.stderr, "StdErr has content check failed for `%s`", tt.program)
+		newAssert.Equalf(tt.expectedExitCode, result.exitCode, "Exit code incorrect for `%s`", tt.program)
+		newAssert.Equalf(tt.expectedStdOut, result.stdout, "StdOut has content check failed for `%s`", tt.program)
+		newAssert.Equalf(tt.expectedStdErr, result.stderr, "StdErr has content check failed for `%s`", tt.program)
 	}
 }
 
 func TestRunDuration(t *testing.T) {
-	assert := assert.New(t)
+	newAssert := assert.New(t)
 
 	duration := 2.0
 	program := exec.Command("test/resources/sleeping.py", fmt.Sprintf("%f", duration))
 	result := run(program)
 
-	assert.Equal(0, result.exitCode, "Exit code incorrect for `%s`", program)
-	assert.GreaterOrEqual(result.duration.Seconds(), duration, "Duration incorrect `%s`", program)
-	assert.LessOrEqual(result.duration.Seconds(), duration+1, "Duration incorrect `%s`", program)
+	newAssert.Equal(0, result.exitCode, "Exit code incorrect for `%s`", program)
+	newAssert.GreaterOrEqual(result.duration.Seconds(), duration, "Duration incorrect `%s`", program)
+	newAssert.LessOrEqual(result.duration.Seconds(), duration+1, "Duration incorrect `%s`", program)
 }

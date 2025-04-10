@@ -50,9 +50,9 @@ func probe(w http.ResponseWriter, r *http.Request) {
 
 func run(cmd *exec.Cmd) runResult {
 	var result runResult
-	var outbuf, errbuf bytes.Buffer
-	cmd.Stdout = &outbuf
-	cmd.Stderr = &errbuf
+	var outBuf, errBuf bytes.Buffer
+	cmd.Stdout = &outBuf
+	cmd.Stderr = &errBuf
 
 	log.Debug("[Run] Start cmd", cmd)
 	start := time.Now()
@@ -62,8 +62,8 @@ func run(cmd *exec.Cmd) runResult {
 	result.duration = time.Since(start)
 	log.Debug("[Run] End cmd duration: ", result.duration)
 
-	result.stdout = outbuf.String()
-	result.stderr = errbuf.String()
+	result.stdout = outBuf.String()
+	result.stderr = errBuf.String()
 
 	result.exitCode = 0
 	if err != nil {
