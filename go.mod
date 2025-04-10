@@ -1,6 +1,6 @@
 module mostwanted.io/prometheus/script_exporter
 
-go 1.24.2
+go 1.24
 
 require (
 	github.com/gorilla/handlers v1.5.2
