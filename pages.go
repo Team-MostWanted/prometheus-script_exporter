@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func landingpage(w http.ResponseWriter, r *http.Request) {
+func landingPage(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
@@ -24,7 +24,7 @@ func landingpage(w http.ResponseWriter, r *http.Request) {
 		)
 	}
 
-	fmt.Fprintf(
+	_, err := fmt.Fprintf(
 		w,
 		`<html>
             <head><title>%s</title></head>
@@ -38,12 +38,15 @@ func landingpage(w http.ResponseWriter, r *http.Request) {
 		title,
 		probesString,
 	)
+	if err != nil {
+		return
+	}
 }
 
 func debugProbe(w http.ResponseWriter, probeName string, result runResult) {
 	title := "Debug Probe " + probeName
 
-	fmt.Fprintf(
+	_, err := fmt.Fprintf(
 		w,
 		`<html>
             <head><title>%s</title></head>
@@ -81,4 +84,7 @@ func debugProbe(w http.ResponseWriter, probeName string, result runResult) {
 		result.stdout,
 		result.stderr,
 	)
+	if err != nil {
+		return
+	}
 }

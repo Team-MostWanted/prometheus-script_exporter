@@ -30,7 +30,7 @@ func main() {
 
 	r := http.NewServeMux()
 
-	r.HandleFunc("/", landingpage)
+	r.HandleFunc("/", landingPage)
 	r.Handle("/metrics", promhttp.Handler())
 	r.HandleFunc("/probe", probe)
 

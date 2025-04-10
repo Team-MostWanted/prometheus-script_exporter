@@ -177,7 +177,7 @@ func configProbes(probesConfig YamlProbeConfig, fileName string) {
 			log.Fatalf("Config failure probe with name '%s' already exists (%s)", probe.Name, fileName)
 		}
 
-		var argumentOrder []string = make([]string, len(probe.Arguments))
+		var argumentOrder = make([]string, len(probe.Arguments))
 
 		var labelNames []string
 		var labelValues []string
@@ -201,7 +201,7 @@ func configProbes(probesConfig YamlProbeConfig, fileName string) {
 
 		i := 0
 		for key, argument := range probe.Arguments {
-			var argName string = fmt.Sprint(key)
+			var argName = fmt.Sprint(key)
 
 			if argument.Param != nil {
 				if _, exists := config.probes[probe.Name].arguments[*argument.Param]; exists {
