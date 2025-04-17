@@ -21,8 +21,6 @@ var flags struct {
 	verbose   *bool
 	port      *int
 	host      *string
-	authUser  *string
-	authPW    *string
 	configDir *string
 	version   *bool
 }

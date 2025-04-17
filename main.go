@@ -15,8 +15,6 @@ func init() {
 	flags.verbose = flag.Bool("v", false, "show verbose output")
 	flags.port = flag.Int("p", 8501, "port used for listening")
 	flags.host = flag.String("h", "", "ip used for listening, leave empty for all available IP addresses")
-	flags.authUser = flag.String("u", "", "username used for authentication")
-	flags.authPW = flag.String("w", "", "password used for authentication")
 	flags.configDir = flag.String("c", "/etc/script_exporter", "folder for config yaml files")
 	flags.version = flag.Bool("V", false, "show version information")
 
@@ -31,8 +29,13 @@ func main() {
 	log.Info("Started on ", addr)
 
 	r := http.NewServeMux()
-	r.Handle("/", withBasicAuth(landingPage))
-	r.Handle("/metrics", withBasicAuth(promhttp.Handler()))
+	if config.server.authUser != "" && config.server.authPW != "" {
+		r.Handle("/", withBasicAuth(landingPage))
+		r.Handle("/metrics", withBasicAuth(promhttp.Handler()))
+	} else {
+		r.HandleFunc("/", landingPage)
+		r.Handle("/metrics", promhttp.Handler())
+	}
 	r.HandleFunc("/probe", probe)
 
 	err := http.ListenAndServe(
