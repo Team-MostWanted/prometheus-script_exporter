@@ -33,8 +33,10 @@ type YamlConfig struct {
 
 // YamlServerConfig mapping to Server part
 type YamlServerConfig struct {
-	Host *string `yaml:"host"`
-	Port *int    `yaml:"port"`
+	Host     *string `yaml:"host"`
+	Port     *int    `yaml:"port"`
+	AuthUser *string `yaml:"auth_user"`
+	AuthPW   *string `yaml:"auth_pw"`
 }
 
 // YamlProbeConfig mapping to Probes part
@@ -55,8 +57,10 @@ type YamlProbeConfig []struct {
 
 type internalConfig struct {
 	server struct {
-		host string
-		port int
+		host     string
+		port     int
+		authUser string
+		authPW   string
 	}
 
 	probes map[string]probeType
@@ -159,6 +163,22 @@ func configServer(serverConfig YamlServerConfig, fileName string) {
 		}
 
 		config.server.port = *serverConfig.Port
+	}
+
+	if serverConfig.AuthUser != nil {
+		if config.server.authUser != "" {
+			log.Fatalf("Config failure 'authUser' is already set (%s)", fileName)
+		}
+
+		config.server.authUser = *serverConfig.AuthUser
+	}
+
+	if serverConfig.AuthPW != nil {
+		if config.server.authPW != "" {
+			log.Fatalf("Config failure 'authPW' is already set (%s)", fileName)
+		}
+
+		config.server.authPW = *serverConfig.AuthPW
 	}
 }
 

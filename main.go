@@ -29,9 +29,13 @@ func main() {
 	log.Info("Started on ", addr)
 
 	r := http.NewServeMux()
-
-	r.HandleFunc("/", landingPage)
-	r.Handle("/metrics", promhttp.Handler())
+	if config.server.authUser != "" && config.server.authPW != "" {
+		r.Handle("/", withBasicAuth(landingPage))
+		r.Handle("/metrics", withBasicAuth(promhttp.Handler()))
+	} else {
+		r.HandleFunc("/", landingPage)
+		r.Handle("/metrics", promhttp.Handler())
+	}
 	r.HandleFunc("/probe", probe)
 
 	err := http.ListenAndServe(
