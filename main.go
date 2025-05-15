@@ -32,11 +32,13 @@ func main() {
 	if config.server.authUser != "" && config.server.authPW != "" {
 		r.Handle("/", withBasicAuth(landingPage))
 		r.Handle("/metrics", withBasicAuth(promhttp.Handler()))
+		r.Handle("/probe", withBasicAuth(probe))
 	} else {
 		r.HandleFunc("/", landingPage)
 		r.Handle("/metrics", promhttp.Handler())
+		r.HandleFunc("/probe", probe)
 	}
-	r.HandleFunc("/probe", probe)
+	r.HandleFunc("/health", health)
 
 	err := http.ListenAndServe(
 		addr,

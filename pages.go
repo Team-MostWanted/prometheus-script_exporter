@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -41,6 +42,17 @@ func landingPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
+}
+
+func health(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/health" {
+		http.NotFound(w, r)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"status": "OK"})
+	return
 }
 
 func debugProbe(w http.ResponseWriter, probeName string, result runResult) {
