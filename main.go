@@ -24,9 +24,10 @@ func init() {
 func main() {
 	setup()
 
+	version := fmt.Sprintf("%s, %s (%s), build: %s", name, version, date, commit)
 	addr := fmt.Sprintf("%s:%d", config.server.host, config.server.port)
 
-	log.Info("Started on ", addr)
+	log.Infof("Started %s on %s", version, addr)
 
 	r := http.NewServeMux()
 	if config.server.authUser != "" && config.server.authPW != "" {
